@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Carnet Muscu</title>
+  <meta name="description" content="Carnet de musculation : notez vos séances, séries et progrès, même hors ligne.">
+  <meta name="theme-color" content="#15171a" media="(prefers-color-scheme: dark)">
+  <meta name="theme-color" content="#edeff1" media="(prefers-color-scheme: light)">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="Muscu">
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="icon" href="icons/icon-192.png" type="image/png" sizes="192x192">
+  <link rel="icon" href="icons/icon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="icons/icon-192.png">
+  <link rel="stylesheet" href="styles.css">
+  <script src="seed.js" defer></script>
+  <script src="app.js" defer></script>
+</head>
+<body>
+  <div class="app" id="app">
+    <main id="main">
+      <section class="view active" id="view-seance" data-view="seance" aria-label="Séance">
+        <header class="topbar">
+          <h1 class="topbar-title">Séance</h1>
+          <p class="topbar-sub">Chargement…</p>
+        </header>
+        <noscript><div class="empty"><p class="empty-text">JavaScript est nécessaire pour utiliser Carnet Muscu.</p></div></noscript>
+      </section>
+      <section class="view" id="view-historique" data-view="historique" aria-label="Historique"></section>
+      <section class="view" id="view-progres" data-view="progres" aria-label="Progrès"></section>
+      <section class="view" id="view-reglages" data-view="reglages" aria-label="Réglages"></section>
+    </main>
+
+    <nav class="tabbar" aria-label="Navigation principale">
+      <button type="button" class="tab active" data-tab="seance" aria-current="page">
+        <svg class="tab-icon" viewBox="0 0 24 24" width="24" height="24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M6.5 6.5v11M17.5 6.5v11M3.5 9v6M20.5 9v6M6.5 12h11"/>
+        </svg>
+        <span class="tab-label">Séance</span>
+      </button>
+      <button type="button" class="tab" data-tab="historique">
+        <svg class="tab-icon" viewBox="0 0 24 24" width="24" height="24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="3.5" y="5" width="17" height="15" rx="2"/>
+          <path d="M3.5 10h17M8 3v4M16 3v4M8 14h3M8 17h6"/>
+        </svg>
+        <span class="tab-label">Historique</span>
+      </button>
+      <button type="button" class="tab" data-tab="progres">
+        <svg class="tab-icon" viewBox="0 0 24 24" width="24" height="24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M3.5 20.5h17M4 16l5-5 4 3 7-7"/>
+          <path d="M15 7h5v5"/>
+        </svg>
+        <span class="tab-label">Progrès</span>
+      </button>
+      <button type="button" class="tab" data-tab="reglages">
+        <svg class="tab-icon" viewBox="0 0 24 24" width="24" height="24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M4 7h10M18 7h2M4 17h4M12 17h8"/>
+          <circle cx="16" cy="7" r="2.2"/>
+          <circle cx="10" cy="17" r="2.2"/>
+        </svg>
+        <span class="tab-label">Réglages</span>
+      </button>
+    </nav>
+  </div>
+
+  <!-- Minuteur de repos (flottant) -->
+  <div class="timer hidden" id="timer" role="timer" aria-live="off">
+    <button type="button" class="btn btn-ghost btn-icon" data-action="timer-minus" aria-label="Retirer 15 secondes">
+      <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M6 12h12"/></svg>
+    </button>
+    <button type="button" class="timer-value" id="timer-value" data-action="timer-toggle" aria-label="Minuteur de repos : toucher pour arrêter">1:30</button>
+    <button type="button" class="btn btn-ghost btn-icon" data-action="timer-plus" aria-label="Ajouter 15 secondes">
+      <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M6 12h12M12 6v12"/></svg>
+    </button>
+    <button type="button" class="btn btn-ghost btn-icon" data-action="timer-stop" aria-label="Fermer le minuteur">
+      <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg>
+    </button>
+  </div>
+
+  <!-- Notifications -->
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+  <!-- Boîtes de dialogue (remplies par app.js) -->
+  <div id="modal-root"></div>
+
+  <script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', function () {
+        navigator.serviceWorker.register('./sw.js').catch(function () { /* hors ligne indisponible */ });
+      });
+    }
+  </script>
+</body>
+</html>
